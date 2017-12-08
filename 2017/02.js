@@ -30,4 +30,15 @@ const sum = spreadsheetNumeric.reduce((accumulator, value) => {
     return accumulator;
 }, 0);
 
+//----------------------------------- 02 -------------------------------------------
+
+const sum2 = spreadsheetNumeric.reduce((accumulator, value) => {
+    value.forEach((x, i) => value.forEach((y, j) => {
+        if (x%y === 0 && i !== j) accumulator += x/y; 
+    }))
+
+    return accumulator;
+}, 0);
+
+
 console.log(sum);
