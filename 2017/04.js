@@ -520,7 +520,7 @@ checkPassPhrases = (phrases) =>{
     const pArr= phrasesParseToArray(phrases);
 
     const numOfValid = pArr.reduce((acc, phrase) => {
-        if (isValidPhrase(phrase)) acc++;
+        if (!hasDuplicateInPhrase(phrase) && !hasAnagramInPhrase(phrase)) acc++;
 
         return acc;
     }, 0);
@@ -528,16 +528,65 @@ checkPassPhrases = (phrases) =>{
     console.log(numOfValid);
 }
 
-isValidPhrase = (phrase) => {
+hasDuplicateInPhrase = (phrase) => {
     let map = {};
-    let exists = true;
+    let exists = false;
 
     phrase.split(' ').forEach((item) => {
-        if (map[item]) exists = false;
+        if (map[item]) exists = true;
         map[item] = 1;
     });
 
     return exists;
 }
+
+hasAnagramInPhrase = (phrase) => {
+    let map = {};
+    let exists = false;
+    let words = phrase.split(' ');
+
+    words.forEach((item) => {
+        let charMap = {};
+        item.split('').forEach((char) => {
+            if(!charMap[char]) charMap[char] = 1;
+            else charMap[char]++;
+        })
+
+        map[item] = charMap;
+    });
+
+    for(let i=0; i< words.length; i++) {
+        for (let j=0; j< words.length; j++) {
+            if (i === j) continue;
+
+            let isSame = areSameObj(map[words[i]], map[words[j]]);
+
+            if(isSame) {
+                exists = true;
+                break;
+            }
+        }
+    }
+
+    return exists;
+}
+
+areSameObj = (o1, o2) => {
+    for(var p in o1){
+        if(o1.hasOwnProperty(p)){
+            if(o1[p] !== o2[p]){
+                return false;
+            }
+        }
+    }
+    for(var p in o2){
+        if(o2.hasOwnProperty(p)){
+            if(o1[p] !== o2[p]){
+                return false;
+            }
+        }
+    }
+    return true;
+};
 
 checkPassPhrases(phrases);
