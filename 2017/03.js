@@ -69,3 +69,54 @@ const middlePosition = middle(num);
 steps = Math.abs(numPosition.x - middlePosition.x) + Math.abs(numPosition.y - middlePosition.y)
 console.log(steps);
 
+
+// ---------------------- 02 - first try
+
+clear();
+recursion = (max, border, itteration) => {
+
+    itteration++;
+
+    let borderNew = generateNextBorder([...border], itteration);
+//     console.log(borderNew);
+//     if (Math.max(...borderNew) < max) 
+    if(itteration < 5) {
+        recursion(max, borderNew, itteration);
+    }
+}
+
+generateNextBorder = (border, itteration) => {
+    console.log(border);
+    let side = (2*itteration) + 1;
+    let obvod = (4*side) - 4;
+
+    let newVector = [];
+
+    for(let i=0; i<obvod; i++) {
+        if(border.length === 1 && i === 0) {
+            newVector.push(1);
+        } else {
+            console.log(newVector[i-1])
+            let prev = newVector[i-1];
+            newVector.push(prev+1)
+        }
+    }
+
+//     border.push(itteration);
+    return newVector;
+}
+
+// firstPosition = ()
+
+getPosition = (obvod, position) => {
+    let side = (obvod+4) / 4;
+
+    console.log(side, position);
+
+    if(position === 0) return 0;
+    else {
+
+    }
+}
+
+recursion(15, [1], 0);
