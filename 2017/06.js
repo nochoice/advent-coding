@@ -1,6 +1,7 @@
 clear();
 
 banksInput = `14	0	15	12	11	11	3	5	1	6	8	4	9	1	8	4`;
+// banksInput = `0 2 7 0`;
 
 banks = banksInput.split('\t').map(item => +item);
 
@@ -47,6 +48,17 @@ stateExists = (states, state) => {
     return states.indexOf(state) > -1;
 }
 
+getLoopSize = (states, state) => {
+    let itter = 0;
+    for (let i=states.length; i > 0; i--) {
+        if(states[i] === state) break;
+
+        itter++;
+    }
+
+    return itter;
+}
+
 countItteration = (banks) => {
     let states = [];
     let state;
@@ -60,7 +72,10 @@ countItteration = (banks) => {
         states.push(state.join(''));
         banks = state;
     }
-    console.log(states.length);
+
+    console.log('Max size: ', states.length);
+    console.log('Loop after: ', getLoopSize(states, state.join('')));
+    
 }
 
 countItteration(banks);
