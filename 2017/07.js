@@ -1497,8 +1497,11 @@ createNode = (nodeStr) => {
 
     return {
         children: matches[4] ? matches[4].split(', ') : [],
+        childrenObj: [],
         name: matches[1],
-        weight: matches[2]
+        weight: parseInt(matches[2], 10),
+        weightBegin: parseInt(matches[2], 10),
+        depth: 0
     }
 }
 
@@ -1517,6 +1520,14 @@ findRoot = (flatStructure) => {
 }
 
 flatStructure = inputArr.map(node => createNode(node));
+mapStructure = (flatStructure) => {
+    let out = {};
+    flatStructure.forEach(node => {
+        out[node.name] = node;
+    });
+
+    return out;
+}
 
 findRoot(flatStructure);
 
@@ -1545,6 +1556,13 @@ treeStructure = generateTreeStructure(mapStructure(flatStructure), findRoot(flat
 fifoStructure = (treeStructure) => {
     let fifo = [];
 
+    fifo.push({
+        parent: treeStructure,
+        name: treeStructure.name,
+        weight: treeStructure.weight,
+        depth: treeStructure.depth
+    });
+
     const rec = (treeStructure) => {
         treeStructure.childrenObj.forEach(node => {
             let o = {
@@ -1560,27 +1578,63 @@ fifoStructure = (treeStructure) => {
     }
     
     rec(treeStructure);
-    return fifo;
+    return fifo.reverse();
 }
-
-fifoStr = fifoStructure(treeStructure, findRoot(flatStructure));
 
 countWeight = (tree) => {
     const rec = (treeStructure) => {
         treeStructure.childrenObj.forEach(node => {
-            
-            console.log(treeStructure);
-            
-            treeStructure.weight = treeStructure.weight + node.weight;
-            console.log(treeStructure.weight);
             rec(node); 
+            treeStructure.weight += node.weight;
         });
         
-        return treeStructure.weight;
-        
+        return treeStructure.weight;  
     }
-    
-    rec(treeStructure);
+
+    rec(tree);
+
+    return tree;
 }
 
-countWeight(treeStructure);
+fifoStr = fifoStructure(countWeight(treeStructure), findRoot(flatStructure));
+
+getResult = (node) => {
+    console.log(node);
+    let dist = {};
+    node.parent.childrenObj.forEach((node) => {
+        dist[node.weight] = dist[node.weight] + 1 || 1;
+    });
+
+    let distNum = +Object.keys(dist).filter((key) => dist[key] === 1);
+    let rightNum = +Object.keys(dist).filter((key) => dist[key] !== 1);
+    const distNode = node.parent.childrenObj.filter((node) => node.weight === distNum)[0];
+    
+    console.log(distNode);
+    console.log((rightNum - distNode.weight) + distNode.weightBegin);
+}
+
+check = (fifoStructure) => {
+    
+    let parent = fifoStructure[0].parent.name;
+    let a = [];
+    for (let i = 0; i<fifoStructure.length; i++) {
+        if(fifoStructure[i].parent.name !== parent) {
+            let isSame = !!a.reduce(function(a, b){ return (a === b) ? a : NaN; });
+            
+            if(!isSame) {
+                getResult(fifoStructure[i-1]);
+                break;
+            }
+
+            a = [];
+            a.push(fifoStructure[i].weight);
+            parent = fifoStructure[i].parent.name;
+        } else {
+            a.push(fifoStructure[i].weight);
+        }
+    }
+    console.log(fifoStructure);
+
+}
+
+check(fifoStr);
