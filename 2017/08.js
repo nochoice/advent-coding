@@ -1033,7 +1033,10 @@ dec = (a, b) => a-b;
 
 instructions = instructionsParse(input);
 
+let maxNum = Number.NEGATIVE_INFINITY;
+
 instructions.forEach(instruction => {
+
     let reg = instruction[1];
     let num = instruction[3];
     let condition = instruction[4];
@@ -1043,14 +1046,14 @@ instructions.forEach(instruction => {
 
     condition = prepareRegisterCondition(conditionParse(condition));
     if(eval(condition)) {
-        if(action === 'inc' && eval(condition)) register[reg] += parseInt(num, 10);
-        if(action === 'dec' && eval(condition)) register[reg] -= parseInt(num, 10);
+        if(action === 'inc') register[reg] += parseInt(num, 10);
+        if(action === 'dec') register[reg] -= parseInt(num, 10);
+
+        if(register[reg] > maxNum) maxNum = register[reg];
     }
-   
-    
 });
 
-console.log(Math.max(...Object.values(register)));
+console.log(Math.max(...Object.values(register)), maxNum);
 
 
 
