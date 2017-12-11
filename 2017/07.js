@@ -1519,3 +1519,68 @@ findRoot = (flatStructure) => {
 flatStructure = inputArr.map(node => createNode(node));
 
 findRoot(flatStructure);
+
+generateTreeStructure = (mapStructure, rootNode) => {
+    let rec = (node, depth) => {
+        node.depth = depth;
+        depth++;
+
+        if (node.children.length) {
+            node.children.forEach(name => {
+                node.childrenObj.push(rec(mapStructure[name], depth));
+            });
+        }
+
+        return node;
+    }
+
+    tree = rec(mapStructure[rootNode], 0);
+
+    return tree;
+}
+
+treeStructure = generateTreeStructure(mapStructure(flatStructure), findRoot(flatStructure));
+
+
+fifoStructure = (treeStructure) => {
+    let fifo = [];
+
+    const rec = (treeStructure) => {
+        treeStructure.childrenObj.forEach(node => {
+            let o = {
+                parent: treeStructure,
+                name: node.name,
+                weight: node.weight,
+                depth: node.depth
+            }
+            fifo.push(o);
+        });
+
+        treeStructure.childrenObj.forEach(node => rec(node));
+    }
+    
+    rec(treeStructure);
+    return fifo;
+}
+
+fifoStr = fifoStructure(treeStructure, findRoot(flatStructure));
+
+countWeight = (tree) => {
+    const rec = (treeStructure) => {
+        treeStructure.childrenObj.forEach(node => {
+            
+            console.log(treeStructure);
+            
+            treeStructure.weight = treeStructure.weight + node.weight;
+            console.log(treeStructure.weight);
+            rec(node); 
+        });
+        
+        return treeStructure.weight;
+        
+    }
+    
+    rec(treeStructure);
+}
+
+countWeight(treeStructure);
