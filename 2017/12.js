@@ -1,3 +1,5 @@
+clear();
+
 input = `0 <-> 396, 1867
 1 <-> 1749
 2 <-> 466, 675, 1661
@@ -2043,8 +2045,9 @@ getNodes = (line) => {
 }
 
 // console.log(nodesEdges(input));
+ne = nodesEdges(input);
 
-structure = createGraph(nodesEdges(input).nodes, nodesEdges(input).edges);
+structure = createGraph(ne.nodes, ne.edges);
 
 visited = new Set();
 
@@ -2055,6 +2058,18 @@ getSetOf = (graph, startPoint) => {
         if (!visited.has(item)) getSetOf(graph, item)
     });
 }
-getSetOf(structure, '0');
 
-console.log(visited.size);
+count = 0;
+
+ne.nodes.forEach(node => {
+    if (!visited.has(node)) {
+        getSetOf(structure, node);
+        count++;
+    }
+})
+
+console.log(count, ne.nodes);
+
+// getSetOf(structure, '0');
+
+// console.log(visited.size);
