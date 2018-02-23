@@ -37,14 +37,31 @@ replaceArr = (arr, repArr, position) => {
     return arrDup;
 }
 
-currentPosition = 0;
-lengths.forEach((len, itt) => {
-    
-    let sub = getSubArray(input, currentPosition, lengths[itt]);
-    let rep = replaceArr(input, reverseArr(sub), currentPosition);
+run = (input, lengths, currentPosition, skipSize) => {
+   lengths.forEach((len, itt) => {
+        let sub = getSubArray(input, currentPosition, lengths[itt]);
+        let rep = replaceArr(input, reverseArr(sub), currentPosition);
 
-    input = rep;
-    currentPosition = currentPosition + itt + lengths[itt];
-});
-console.log(input);
-console.log(input[0] * input[1]);
+        input = rep;
+        skipSize + itt;
+
+        console.log(skipSize);
+
+        currentPosition = currentPosition + skipSize + itt + lengths[itt];
+    }); 
+
+    return {
+        arr: input,
+        currentPosition: currentPosition,
+        skipSize: skipSize + lengths.length
+    };
+}
+
+out = run(input, lengths, 0, 0);
+
+console.log(out);
+
+// currentPosition = 0;
+
+// console.log(input);
+// console.log(input[0] * input[1]);
